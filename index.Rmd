@@ -1,6 +1,6 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Bolin Shen"
 description: "My final project"
 output:
   distill::distill_article:
@@ -11,4 +11,6 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to a few topics, including COVID-19, China, bookstores & booksales, and immigration. In terms of COVID-19, perhaps I could explore different countries' effectiveness in combatting the pandemic through looking at number of cases and amount of resources available. I'm interested in data about China, but I'm not sure what kind of dataset I would use, and how accurate they would be. I love reading, so doing a final project on book sales would also be cool, for example the impact of COVID on physical, e-book, and audiobook sales. Finally, I'm taking a class on immigration law, and I would love to work on some sort of dataset related to US immigration, and perhaps look at the numbers and trends in US immigration law.
+
+
