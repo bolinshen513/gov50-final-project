@@ -7,11 +7,76 @@ output:
     self_contained: false
 ---
 
+Final Project Website Link: https://bolinshen513.github.io/gov50-final-project/
+
 ## Project Proposal
 
 Does access to information/news increase the chances of political uprising? In this project, I want to examine the extent to which citizens' access to information and outside news (through channels like radio, newspapers, and television) leads to a greater likelihood of citizen uprising (for example riots and revolutions). I hypothesize that there is a positive correlation between access to information and likelihood of uprising: the less access citizens have to outside news and freedom of information, the less likely there will be grassroots uprisings against incumbent regimes; vice versa, the more access citizens have to information and news, the more likely they will be to rebel against the established governance. Traditional modernization theory from political theorists like Daniel Lerner and Seymour Martin Lipset place a huge emphasis on the dissemination of information to citizen, and argue that increased access to outside regimes and modes of governance as a result of globalization is likely to promote political thinking among grassroots. Along a similar line of thinking, I predict that a heightened sense of political awareness and understanding among the general populace is likely to lead to greater dissatisfaction with incumbent modes of governance and thus lead to expressions of dissatisfaction through political organization of riots and revolutions. 
 
 I will use the political violence dataset, which is comprised of numerous measures for both access to information and political uprisings. My explanatory variables of interest summarizes access to information: TV access (Televisions per thousand population), radio access (Radios per thousand population), and newspaper access (Newspapers per capita). My outcome variables summarizes the chances/likelihood of political uprising: riots (any violent demonstration or clash of more than 100 citizens), revolutions (any illegal or forced change in the top governmental elite), anti-government demonstrations (any peaceful public gathering of at least 100 people). If I am able to observe greater occurrences of political uprisings with greater access to information and news, this would provide support for my hypothesis. On the other hand, if I observe less instances of political uprisings or the same level of political uprisings across levels of information access, this would provie evidence against my hypothesis. 
+
+Dataset Codebook: https://www.dropbox.com/s/wqmnc9w2stvhlvj/violence-codebook.txt?dl=0
+
+
+```{r, echo = FALSE}
+library(readr)
+violence <- read_csv("~/Downloads/violence.csv")
+library(tidyverse)
+```
+
+## Data and Data Visualization
+
+```{r, echo = FALSE}
+violence <- violence %>% 
+  mutate(info_access = tvPC60 + tvPC70 + tvPC80 + radiosPC60 + radiosPC70 + radiosPC80 + newspaperPC60 + newspaperPC70 + newspaperPC80,
+         uprisings = riots60 + riots70 + riots80 + revols60 + revols70 + revols80 + agovdem60 + agovdem70 + agovdem80,
+         democracy = ((democ70 + democ80) / 2))
+```
+
+```{r, echo = FALSE}
+uprisings <- violence %>% 
+  ggplot(mapping = aes(x = uprisings)) +
+  geom_histogram() +
+  labs(
+    x = "Number of Uprisings (Riots, Revolutions, Demonstrations)",
+    y = "Count",
+    title = "Uprisings in 1960s, 70s, 80s"
+  )
+uprisings
+```
+Interpretation: The distribution seems to be right-skewed, in which the number of uprisings for countries in the 60s, 70s, and 80s primarily falls between 0 and 10.
+
+
+```{r, echo = FALSE}
+access_uprising <- violence %>% 
+  ggplot(mapping = aes(x = info_access, y = uprisings)) +
+  geom_point() +
+  geom_smooth() +
+  geom_smooth(method = lm, se = FALSE, color = "indianred") +
+  labs(
+    x = "Information Access (Newspapers/Radio/TV)",
+    y = "Number of Uprisings",
+    title = "Information Access vs. Uprisings"
+  )
+
+access_uprising
+```
+
+Interpretation: The above visualization demonstrates the relationship between access of information and the number of uprisings. There seems to be a slightly negative correlation between the independent and dependent variables, according to the straight line of best fit (in red). Looking at the smoothed (geom_smooth) blue line, however, we notice a slightly more complicated story that I will continue to analyze later in the project.
+
+
+## Regression
+
+```{r, echo = FALSE}
+lm(uprisings ~ info_access, data = violence)
+```
+
+Interpretation: An average 1 unit increase in information access roughly correlates with a 0.13 decrease in number of uprisings.
+
+
+
+
+
 
 
 

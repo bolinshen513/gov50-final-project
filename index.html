@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-4-1.png","index_files/figure-html5/unnamed-chunk-5-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1517,10 +1517,38 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 
 <div class="d-article">
+<p>Final Project Website Link: <a href="https://bolinshen513.github.io/gov50-final-project/" class="uri">https://bolinshen513.github.io/gov50-final-project/</a></p>
 <h2 id="project-proposal">Project Proposal</h2>
 <p>Does access to information/news increase the chances of political uprising? In this project, I want to examine the extent to which citizens’ access to information and outside news (through channels like radio, newspapers, and television) leads to a greater likelihood of citizen uprising (for example riots and revolutions). I hypothesize that there is a positive correlation between access to information and likelihood of uprising: the less access citizens have to outside news and freedom of information, the less likely there will be grassroots uprisings against incumbent regimes; vice versa, the more access citizens have to information and news, the more likely they will be to rebel against the established governance. Traditional modernization theory from political theorists like Daniel Lerner and Seymour Martin Lipset place a huge emphasis on the dissemination of information to citizen, and argue that increased access to outside regimes and modes of governance as a result of globalization is likely to promote political thinking among grassroots. Along a similar line of thinking, I predict that a heightened sense of political awareness and understanding among the general populace is likely to lead to greater dissatisfaction with incumbent modes of governance and thus lead to expressions of dissatisfaction through political organization of riots and revolutions.</p>
 <p>I will use the political violence dataset, which is comprised of numerous measures for both access to information and political uprisings. My explanatory variables of interest summarizes access to information: TV access (Televisions per thousand population), radio access (Radios per thousand population), and newspaper access (Newspapers per capita). My outcome variables summarizes the chances/likelihood of political uprising: riots (any violent demonstration or clash of more than 100 citizens), revolutions (any illegal or forced change in the top governmental elite), anti-government demonstrations (any peaceful public gathering of at least 100 people). If I am able to observe greater occurrences of political uprisings with greater access to information and news, this would provide support for my hypothesis. On the other hand, if I observe less instances of political uprisings or the same level of political uprisings across levels of information access, this would provie evidence against my hypothesis.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>Dataset Codebook: <a href="https://www.dropbox.com/s/wqmnc9w2stvhlvj/violence-codebook.txt?dl=0" class="uri">https://www.dropbox.com/s/wqmnc9w2stvhlvj/violence-codebook.txt?dl=0</a></p>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<h2 id="data-and-data-visualization">Data and Data Visualization</h2>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<p>Interpretation: The distribution seems to be right-skewed, in which the number of uprisings for countries in the 60s, 70s, and 80s primarily falls between 0 and 10.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="index_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
+</div>
+<p>Interpretation: The above visualization demonstrates the relationship between access of information and the number of uprisings. There seems to be a slightly negative correlation between the independent and dependent variables, according to the straight line of best fit (in red). Looking at the smoothed (geom_smooth) blue line, however, we notice a slightly more complicated story that I will continue to analyze later in the project.</p>
+<h2 id="regression">Regression</h2>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>
+Call:
+lm(formula = uprisings ~ info_access, data = violence)
+
+Coefficients:
+(Intercept)  info_access  
+     4.7332      -0.1322  </code></pre>
+</div>
+<p>Interpretation: An average 1 unit increase in information access roughly correlates with a 0.13 decrease in number of uprisings.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
