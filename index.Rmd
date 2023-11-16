@@ -22,7 +22,10 @@ Dataset Codebook: https://www.dropbox.com/s/wqmnc9w2stvhlvj/violence-codebook.tx
 library(readr)
 violence <- read_csv("~/Downloads/violence.csv")
 library(tidyverse)
+library(modelsummary)
 ```
+
+z-score to standardize, changes in time (differences in differences) - do changes to info access affect riots, eg.
 
 ## Data and Data Visualization
 
@@ -68,10 +71,32 @@ Interpretation: The above visualization demonstrates the relationship between ac
 ## Regression
 
 ```{r, echo = FALSE}
-lm(uprisings ~ info_access, data = violence)
+fit_lm <- lm(uprisings ~ info_access, data = violence)
+fit_lm
 ```
 
 Interpretation: An average 1 unit increase in information access roughly correlates with a 0.13 decrease in number of uprisings.
+
+```{r, echo = FALSE}
+modelsummary::modelsummary(
+  fit_lm,
+  statistic = c("s.e. = {std.error}"),
+  gof_map = c("nobs", "r.squared", "adj.r.squared")
+)
+```
+
+
+Interpretation: The results of this analysis tell us that on average, a one-unit increase in information access is associated with a 0.13 decrease in uprisings. This indicates a very small negative correlation between the two variables. The intercept doesn’t give us much meaningful information though, and proving a causal relationship is unlikely as there are many confounding factors at play. For example, the incumbent political regime and citizen satisfaction might influence the treatment group and therefore the results of the study These are often key factors when determining number of uprisings. Thus, it cannot be said without further experimental results that greater information access causes less uprisings on average.
+
+
+
+
+
+
+
+
+
+
 
 
 
