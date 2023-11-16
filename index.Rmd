@@ -25,7 +25,6 @@ library(tidyverse)
 library(modelsummary)
 ```
 
-
 ## Data and Data Visualization
 
 ```{r, echo = FALSE}
@@ -73,8 +72,6 @@ Interpretation: The above visualization demonstrates the relationship between ac
 fit_lm <- lm(uprisings ~ info_access, data = violence)
 fit_lm
 ```
-
-Interpretation: An average 1 unit increase in information access roughly correlates with a 0.13 decrease in number of uprisings.
 
 ```{r, echo = FALSE}
 modelsummary::modelsummary(
