@@ -25,7 +25,6 @@ library(tidyverse)
 library(modelsummary)
 ```
 
-z-score to standardize, changes in time (differences in differences) - do changes to info access affect riots, eg.
 
 ## Data and Data Visualization
 
