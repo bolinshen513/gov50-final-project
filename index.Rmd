@@ -160,7 +160,7 @@ In terms of statistical significance, the p-value of the independent variable is
 
 The following multivariate regression demonstrates the relationship between autocratic ruling party origin, tenure, and whether or not the party acceded to democracy before the end of its tenure.
 
-```{r}
+```{r, echo = FALSE}
 fit_2 <- lm(years_in_power ~ Party_Origin + `Accession to Democracy?`, data = autocracy)
 ```
 
