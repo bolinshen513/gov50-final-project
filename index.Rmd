@@ -9,92 +9,181 @@ output:
 
 Final Project Website Link: https://bolinshen513.github.io/gov50-final-project/
 
-## Project Proposal
+## Introduction
 
-Does access to information/news increase the chances of political uprising? In this project, I want to examine the extent to which citizens' access to information and outside news (through channels like radio, newspapers, and television) leads to a greater likelihood of citizen uprising (for example riots and revolutions). I hypothesize that there is a positive correlation between access to information and likelihood of uprising: the less access citizens have to outside news and freedom of information, the less likely there will be grassroots uprisings against incumbent regimes; vice versa, the more access citizens have to information and news, the more likely they will be to rebel against the established governance. Traditional modernization theory from political theorists like Daniel Lerner and Seymour Martin Lipset place a huge emphasis on the dissemination of information to citizen, and argue that increased access to outside regimes and modes of governance as a result of globalization is likely to promote political thinking among grassroots. Along a similar line of thinking, I predict that a heightened sense of political awareness and understanding among the general populace is likely to lead to greater dissatisfaction with incumbent modes of governance and thus lead to expressions of dissatisfaction through political organization of riots and revolutions. 
+How do the origins of autocratic ruling parties affect their strength and durability? From the Chinese Communist Party to Mexico's Institutional Revolutionary Party, autocratic ruling parties are among the most salient institutional actors in modern politics. While there is extensive literature on the modern methods used by autocratic ruling parties to extend and consolidate power, this study seeks to extract wisdom from history, particularly at the moments of autocratic ruling parties' inception. 
 
-I will use the political violence dataset, which is comprised of numerous measures for both access to information and political uprisings. My explanatory variables of interest summarizes access to information: TV access (Televisions per thousand population), radio access (Radios per thousand population), and newspaper access (Newspapers per capita). My outcome variables summarizes the chances/likelihood of political uprising: riots (any violent demonstration or clash of more than 100 citizens), revolutions (any illegal or forced change in the top governmental elite), anti-government demonstrations (any peaceful public gathering of at least 100 people). If I am able to observe greater occurrences of political uprisings with greater access to information and news, this would provide support for my hypothesis. On the other hand, if I observe less instances of political uprisings or the same level of political uprisings across levels of information access, this would provie evidence against my hypothesis. 
+In this study, I examine the extent to which an autocratic ruling party's origins contribute to their longevity as measured by political tenure. In particular, I focus on autocratic ruling parties with 2 distinct types of origins: first, ruling parties created by sitting dictators, and second, ruling parties founded through violent revolutions and independence movements. I hypothesize that autocratic ruling parties founded through violent revolutions and independence movements are more durable than parties created by sitting dictators. 
 
-Dataset Codebook: https://www.dropbox.com/s/wqmnc9w2stvhlvj/violence-codebook.txt?dl=0
+This hypothesis contributes to the political science literature on regime stability and autocratic governance. Samuel Huntington famously described in 1968 that the strongest ruling parties are a product of social forces developing political organization and winning control of the state, often through revolution. Similarly, Steven Levitsky and Lucan Way describe in their 2022 book, *Revolution and Dictatorship: The Violent Origins of Durable Authoritarianism*, why autocracies and dictatorships born of violent revolution—such as those in China, Cuba, Iran, the Soviet Union, and Vietnam—are extraordinarily durable, because the radical efforts to transform society through revolution ultimately foster the unity and state-building that underpin a strong autocracy. 
+
+My sample is comprised of data regarding ruling party tenures, founding origins, and more, from all autocratic ruling parties in the world from 1940 to 2015. My explanatory variable of interest is the origin of the autocratic ruling party, specifically in comparing dictator-created parties vs. those founded through revolution-independence. My outcome variable is party tenure, or the number of years the autocratic ruling party is in power, which measures its longevity and durability. If I am able to observe a longer period of party tenure for autocratic ruling parties founded through violent revolution and independence movements, this would provide evidence for my hypothesis. On the other hand, if I observe a greater number of years in power for autocratic ruling parties created by sitting dictators, this would provide evidence against my hypothesis. 
 
 
 ```{r, echo = FALSE}
 library(readr)
-violence <- read_csv("~/Downloads/violence.csv")
+autocracy <- read_csv("~/Downloads/AutocraticRulingPartiesDataset.xlsx - All Autocratic Parties.csv")
 library(tidyverse)
 library(modelsummary)
 ```
 
-## Data and Data Visualization
-
 ```{r, echo = FALSE}
-violence <- violence %>% 
-  mutate(info_access = tvPC60 + tvPC70 + tvPC80 + radiosPC60 + radiosPC70 + radiosPC80 + newspaperPC60 + newspaperPC70 + newspaperPC80,
-         uprisings = riots60 + riots70 + riots80 + revols60 + revols70 + revols80 + agovdem60 + agovdem70 + agovdem80,
-         democracy = ((democ70 + democ80) / 2))
+autocracy <- autocracy %>% 
+  mutate(last_year = as.numeric(`Last Year of Power`))
 ```
 
 ```{r, echo = FALSE}
-uprisings <- violence %>% 
-  ggplot(mapping = aes(x = uprisings)) +
-  geom_histogram() +
+autocracy <- autocracy %>% 
+  mutate(years_in_power = `last_year` - `Year in Power`)
+```
+
+```{r, echo = FALSE}
+autocracy <- autocracy %>% 
+  mutate(Party_Origin = case_when(Origin == "Revolution" | Origin == "Independence" ~ "Revolution-Independence",
+                             Origin == "Dictator-Created"| Origin == "Dictator-Created/Merger" | Origin == "Dictator-Created/Split" ~ "Dictator-Created"))
+```
+
+```{r, echo = FALSE}
+autocracy <- autocracy %>% 
+  mutate(origin_graph = case_when(Origin == "Revolution" ~ "Revolution",
+                                  Origin == "Independence" ~ "Independence",
+                                  Origin == "Elite Coalition" ~ "Elite Coalition",
+                                  Origin == "Communist" ~ "Communist",
+                                  Origin == "Merger" ~ "Merger",
+                                  Origin == "Split" ~ "Split",
+                                  Origin == "Military" ~ "Military",
+                                  Origin == "Dictator-Created"| Origin == "Dictator-Created/Merger" | Origin == "Dictator-Created/Split" ~ "Dictator-Created"))
+```
+
+## Data, Research Design, and Dependent Variable
+
+As mentioned before, my data is taken from the [Autocratic Ruling Parties Dataset](https://doi.org/10.1177/0022002719876000) compiled by George Washington University Professor Michael Miller, which documents characteristics of autocratic ruling parties including their ruling tenures, founding origins, modes of gaining and losing power, and so on, covering all autocratic ruling parties in the world from 1940 to 2015.
+
+The research design is a cross-sectional observational study since the data regarding these variables was collected at one time across the sample populations. It is an observational study since the participants were not organized into control or treatment groups beforehand – they were simply observed and recorded.
+
+The key independent variable I’m examining is autocratic ruling party origin, labeled as "Origin" in the dataset. The following plot represents the density distribution of the independent variable:
+
+```{r, echo = FALSE}
+founding_origin <- autocracy %>% 
+  ggplot(mapping = aes(x = fct_infreq(origin_graph), na.rm = TRUE)) +
+  geom_histogram(stat = "count") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_x_discrete(na.translate = FALSE) +
   labs(
-    x = "Number of Uprisings (Riots, Revolutions, Demonstrations)",
+    x = "Origin",
     y = "Count",
-    title = "Uprisings in 1960s, 70s, 80s"
+    title = "Origins of Autocratic Ruling Parties"
   )
-uprisings
+founding_origin
 ```
-Interpretation: The distribution seems to be right-skewed, in which the number of uprisings for countries in the 60s, 70s, and 80s primarily falls between 0 and 10.
 
+This plot shows the distribution of autocratic ruling parties’ founding origins. The most common scenario is where a sitting dictator creates the party, including cases where a dictator creates a new party through a forced merger or split. Also common are parties founded to fight for revolution or independence or consolidated through elite coalition.
+
+The key dependent variable I’m examining is party tenure, or years in power, labeled as "years_in_power" in the dataset. The following plot represents the distribution of the dependent variable:
 
 ```{r, echo = FALSE}
-access_uprising <- violence %>% 
-  ggplot(mapping = aes(x = info_access, y = uprisings)) +
-  geom_point() +
-  geom_smooth() +
-  geom_smooth(method = lm, se = FALSE, color = "indianred") +
+tenure <- autocracy %>% 
+  ggplot(mapping = aes(x = years_in_power)) +
+  geom_histogram() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   labs(
-    x = "Information Access (Newspapers/Radio/TV)",
-    y = "Number of Uprisings",
-    title = "Information Access vs. Uprisings"
+    x = "Years in Power",
+    y = "Count",
+    title = "Autocratic Ruling Party Tenures"
   )
-
-access_uprising
+tenure
 ```
 
-Interpretation: The above visualization demonstrates the relationship between access of information and the number of uprisings. There seems to be a slightly negative correlation between the independent and dependent variables, according to the straight line of best fit (in red). Looking at the smoothed (geom_smooth) blue line, however, we notice a slightly more complicated story that I will continue to analyze later in the project.
+This plot shows a histogram of party tenure, or how many years autocratic ruling parties survive in power. The distribution of party tenure is right-skewed, in which the majority of autocratic ruling parties remain in power between 0 and 25 years, with very few surviving for more than 50 years.
 
 
-## Regression
+# Results
+
+## Data Visualization
+
+This project explores the relationship between autocratic ruling parties' origins and their durability as measured by their tenure, or number of years in power. The following boxplot visualizes the variables:
 
 ```{r, echo = FALSE}
-fit_lm <- lm(uprisings ~ info_access, data = violence)
-fit_lm
+longevity <- autocracy %>% 
+  ggplot(mapping = aes(x = fct_infreq(origin_graph), y = years_in_power)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_x_discrete(na.translate = FALSE) +
+  labs(
+    x = "Origin",
+    y = "Years in Power",
+    title = "Autocratic Ruling Parties' Origins and Tenure"
+  )
+longevity
+```
+
+For the sake of this specific project, I will focus on two specific types of origins of autocratic ruling parties. Namely, I will compare the tenure of dictator-created autocratic ruling parties vs. that of parties founded through violent revolution and independence movements. The following boxplots visualizes the relationship between origin and tenure for these two specific types of autocratic ruling parties:
+
+```{r, echo = FALSE}
+longevity2 <- autocracy %>% 
+  ggplot(mapping = aes(x = Party_Origin, y = years_in_power)) +
+  geom_boxplot() +
+  scale_x_discrete(na.translate = FALSE) +
+  labs(
+    x = "Origin",
+    y = "Years in Power",
+    title = "Origins and Tenure: Dictator-Created vs. Revolution-Independence"
+  )
+longevity2
+```
+
+Th boxplot shows a difference between autocratic ruling party tenure between parties created by dictators as opposed to those founded through revolution and independence. The median party founded through revolution-independence remained in power for longer than the median dictator-created party, which suggests that parties founded through revolution-independence were more long-lasting and durable. The following regressions dive deeper into the analysis.
+
+
+## Primary Variable Regression
+
+The following regression model reveals the relationship between autocratic ruling party origin and tenure.
+
+```{r, echo = FALSE}
+fit_1 <- lm(years_in_power ~ Party_Origin, data = autocracy) 
 ```
 
 ```{r, echo = FALSE}
 modelsummary::modelsummary(
-  fit_lm,
-  statistic = c("s.e. = {std.error}"),
+  fit_1,
+  statistic = c("s.e. = {std.error}", "p = {p.value}"),
   gof_map = c("nobs", "r.squared", "adj.r.squared")
 )
 ```
 
+Because the autocratic ruling party origins variable is a binary independent variable between dictator-created and revolution-independence, the 8.769 intercept value means that on average, dictator-created ruling parties remain in power for 8.769 years. The positive 4.805 value for slope represents the difference in means between the tenure of dictator-created autocratic ruling parties and those founded through revolution-independence. Substantively, it means that revolution-independence parties remained in power for 4.805 more years than dictator-created parties on average. In other words, the average revolution-independence autocratic ruling party remained in power for 13.574 years. 
 
-Interpretation: The results of this analysis tell us that on average, a one-unit increase in information access is associated with a 0.13 decrease in uprisings. This indicates a very small negative correlation between the two variables. The intercept doesn’t give us much meaningful information though, and proving a causal relationship is unlikely as there are many confounding factors at play. For example, the incumbent political regime and citizen satisfaction might influence the treatment group and therefore the results of the study These are often key factors when determining number of uprisings. Thus, it cannot be said without further experimental results that greater information access causes less uprisings on average.
-
-
-
+In terms of statistical significance, the p-value of the independent variable is approximately 0.024. At an alpha value of 0.05, since the p-value is less than the alpha value, it seems to be statistically significant. At the same time, proving a causal relationship is most unlikely as there are too many confounding factors at play in this observational study. For example, factors like institutional differences, citizen satisfaction, economic prosperity, and competitive parties might all influence the stability and thus longevity of autocratic ruling parties, since these pre-treatment variables might bias the results of the study. The fundamental problem of causality in this case is that we are not able to analyze the autocratic ruling parties' tenures under both types of origins, and so we cannot derive the counter-factuals nor confirm full certainty about a causal relationship. Thus, it cannot be said without further experimental results that having a revolution-independence origin causes longer tenures than being dictator-created. 
 
 
+## Multivariable Regression
+
+The following multivariate regression demonstrates the relationship between autocratic ruling party origin, tenure, and whether or not the party acceded to democracy before the end of its tenure.
+
+```{r}
+fit_2 <- lm(years_in_power ~ Party_Origin + `Accession to Democracy?`, data = autocracy)
+```
+
+```{r, echo = FALSE}
+modelsummary::modelsummary(
+  fit_2,
+  statistic = c("s.e. = {std.error}", "p = {p.value}"),
+  gof_map = c("nobs", "r.squared", "adj.r.squared")
+)
+```
+
+The results of this analysis tell us that on average, having revolution-independence origins is associated with an approximate 4.646 increase in years in power as compared to dictator-created parties, after adjusting for whether or not it acceded to democracy. The p-value of this coefficient is 0.027, suggesting that it is statistically significant at the alpha value of 0.05. Meanwhile, after adjusting for the ruling parties' origins, accession to democracy is associated with an approximate 5.504 increase in years in power as compared to not acceding to democracy. The p-value for this coefficient is 0.026, suggesting that it is statistically significant as well at the alpha value of 0.05. 
+
+However, as mentioned above, it is difficult to prove a causal relationship for the origin and tenure variables. At the same time, it is also difficult to prove a causal relationship between the accession to democracy and tenure variables. Due to a number of confounding factors like country-specific institutions and norms, which would affect the durability of the ruling party, the results of the study would vary if they were accounted for.
 
 
+## Conclusion
 
+This study sought to investigate the impact of the origins of autocratic ruling parties on their strength and durability. Through analyzing autocratic ruling parties worldwide from 1940 to 2015, with a focus on their founding origins, specifically comparing parties created by sitting dictators and those established through violent revolutions and independence movements, the evidence support the hypothesis that autocratic ruling parties with origins rooted in revolutionary and independence movements demonstrate greater durability, remaining in power for more extended periods compared to parties created by dictators. The statistical significance of the coefficient at an alpha level of 0.05 held true in both the singular and multivariable regression analysis. This finding aligns with political theories that parties with the most extensive uses of violence in gaining power-specifically through revolutions and independence movements-are very durable because the tight cohesive bonds forged through shared historical struggle contribute to the strength, coerceive capacity, and legitimacy of an autocracy.
 
+However, it is essential to acknowledge the limitations of this analysis. The study relies on available data up to 2015, and the political landscape may have evolved since then. Additionally, the complexity of political dynamics introduces various confounding factors that may influence party tenure, challenging the establishment of a direct causal relationship. Moreover, the dichotomy between dictator-created parties and revolutionary ones oversimplifies the intricate processes leading to the formation of autocratic ruling parties, potentially overlooking nuanced factors that contribute to their strength and durability.
 
-
-
+To enhance the robustness of future analyses, it is crucial to consider more granular data, including regional variations, socio-economic factors, and geopolitical influences. A more nuanced understanding of the internal dynamics within each category of autocratic ruling parties would contribute to a more comprehensive evaluation. Moreover, exploring the temporal evolution of these parties over time could offer insights into the dynamic nature of autocratic regimes. Continuous research and refinement of methodologies are necessary to deepen our understanding of the complex interplay between political origins and longevity in autocratic governance.
 
 
 
