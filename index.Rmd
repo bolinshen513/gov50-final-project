@@ -7,8 +7,6 @@ output:
     self_contained: false
 ---
 
-Final Project Website Link: https://bolinshen513.github.io/gov50-final-project/
-
 # Introduction
 
 How do the origins of autocratic ruling parties affect their strength and durability? From the Chinese Communist Party to Mexico's Institutional Revolutionary Party, autocratic ruling parties are among the most salient institutional actors in modern politics. While there is extensive literature on the modern methods used by autocratic ruling parties to extend and consolidate power, this study seeks to extract wisdom from history, particularly at the moments of autocratic ruling parties' inception. 
@@ -57,11 +55,11 @@ autocracy <- autocracy %>%
 
 # Data, Research Design, and Dependent Variable
 
-As mentioned before, my data is taken from the [Autocratic Ruling Parties Dataset](https://doi.org/10.1177/0022002719876000) compiled by George Washington University Professor Michael Miller, which documents characteristics of autocratic ruling parties including their ruling tenures, founding origins, modes of gaining and losing power, and so on, covering all autocratic ruling parties in the world from 1940 to 2015.
+As mentioned before, my data is taken from the [Autocratic Ruling Parties Dataset](https://doi.org/10.1177/0022002719876000) compiled by George Washington University Professor Michael Miller, which documents characteristics of autocratic ruling parties including their ruling tenures, founding origins, modes of gaining and losing power, and so on, covering all autocratic ruling parties in the world from 1940 to 2015, documenting 279 autocratic ruling party spells (with 262 unique parties).
 
 The research design is a cross-sectional observational study since the data regarding these variables was collected at one time across the sample populations. It is an observational study since the participants were not organized into control or treatment groups beforehand – they were simply observed and recorded.
 
-The key independent variable I’m examining is autocratic ruling party origin, labeled as "Origin" in the dataset. The following plot represents the density distribution of the independent variable:
+The key independent variable I’m examining is autocratic ruling party origin, labeled as "Origin" in the dataset. The variable is observational, and coded by Professor Michael Miller based on the history of the autocratic political parties recorded. The following plot represents the density distribution of the independent variable:
 
 ```{r, echo = FALSE}
 founding_origin <- autocracy %>% 
@@ -79,7 +77,7 @@ founding_origin
 
 This plot shows the distribution of autocratic ruling parties’ founding origins. The most common scenario is where a sitting dictator creates the party, including cases where a dictator creates a new party through a forced merger or split. Also common are parties founded to fight for revolution or independence or consolidated through elite coalition.
 
-The key dependent variable I’m examining is party tenure, or years in power, labeled as "years_in_power" in the dataset. The following plot represents the distribution of the dependent variable:
+The key dependent variable I’m examining is party tenure, or years in power, labeled as "years_in_power" in the dataset. I calculate this variable by subtracting the year the party gained power from the last year the party is in power, which are both variables coded by Professor Michael Miller in the original dataset through historical observation. The following plot represents the distribution of the dependent variable:
 
 ```{r, echo = FALSE}
 tenure <- autocracy %>% 
